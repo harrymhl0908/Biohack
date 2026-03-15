@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="zh-HK">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: #0a0f1e; font-family: -apple-system, 'Noto Sans TC', sans-serif; padding: 14px; color: #e2e8f0; }
+  h2 { font-size: 0.82rem; color: #34d399; margin-bottom: 2px; }
+  .subtitle { font-size: 0.54rem; color: #64748b; margin-bottom: 12px; }
+
+  .box-wrap { max-width: 460px; margin: 0 auto; }
+
+  /* Direction label */
+  .dir {
+    display: flex; align-items: center; justify-content: center;
+    gap: 6px; font-size: 0.5rem; color: #94a3b8; margin-bottom: 5px;
+    font-weight: 700; letter-spacing: 0.05em;
+  }
+  .dir-arrow { font-size: 0.9rem; }
+  .dir-box {
+    display: flex; justify-content: space-between;
+    font-size: 0.48rem; color: #64748b; margin-bottom: 3px; padding: 0 4px;
+  }
+
+  .shell {
+    background: #c8d0dc;
+    border-radius: 12px; padding: 8px;
+    border: 3px solid #9aa5b5;
+    box-shadow: 0 6px 24px rgba(0,0,0,0.55), inset 0 1px 2px rgba(255,255,255,0.2);
+  }
+  .shell-label {
+    text-align: center; font-size: 0.44rem; color: #6b7280;
+    font-weight: 700; letter-spacing: 0.07em; text-transform: uppercase; padding: 2px 0;
+  }
+  .tray-sep {
+    display: flex; align-items: center; gap: 5px; margin: 5px 0;
+  }
+  .tray-sep .ln { flex:1; height:1px; background:#9aa5b5; }
+  .tray-sep span { font-size:0.42rem; color:#6b7280; font-weight:700; letter-spacing:0.05em; white-space:nowrap; }
+
+  .tray {
+    background: #dde3ec; border-radius: 7px;
+    padding: 5px; border: 1.5px solid #b0bac8;
+  }
+
+  /* UPPER: 5 cols */
+  .upper-grid {
+    display: grid;
+    grid-template-columns: 0.65fr 1fr 1.2fr 1.1fr 0.85fr;
+    gap: 4px;
+  }
+
+  /* LOWER: left col (2 stacked) + big center + right col (2 stacked) */
+  .lower-outer {
+    display: grid;
+    grid-template-columns: 0.75fr 2fr 0.9fr;
+    gap: 4px;
+  }
+  .lower-left, .lower-right { display: flex; flex-direction: column; gap: 4px; }
+
+  /* Cell */
+  .cell {
+    border-radius: 6px; padding: 7px 6px 6px;
+    border: 1.5px solid rgba(0,0,0,0.1);
+    display: flex; flex-direction: column; justify-content: space-between;
+    overflow: hidden;
+  }
+  .cell.upper  { min-height: 95px; }
+  .cell.lsm    { min-height: 75px; flex: 1; }
+  .cell.llg    { min-height: 154px; }
+
+  .pills { display: flex; flex-wrap: wrap; gap: 2px; margin-bottom: 4px; align-content: flex-start; min-height: 26px; }
+  .p-tab { display:inline-block; width:7px; height:7px; border-radius:50%; flex-shrink:0; }
+  .p-md  { display:inline-block; width:12px; height:6px; border-radius:20px; flex-shrink:0; }
+  .p-lg  { display:inline-block; width:16px; height:7px; border-radius:20px; flex-shrink:0; }
+  .p-xl  { display:inline-block; width:21px; height:11px; border-radius:50%; flex-shrink:0; opacity:0.88; }
+
+  .cname { font-size: 0.6rem; font-weight: 700; color: #1e293b; line-height: 1.2; }
+  .csub  { font-size: 0.43rem; color: #475569; margin-top: 1px; }
+  .cdose { font-size: 0.41rem; color: #64748b; font-family: monospace; margin-top: 1px; }
+  .ctag  { font-size: 0.41rem; font-weight: 700; padding: 1px 4px; border-radius: 3px; display: inline-block; margin-top: 4px; }
+
+  /* colours */
+  .c-d3   { background:#fffde7; border-color:#d97706; }
+  .c-bco  { background:#fff7ed; border-color:#fb923c; }
+  .c-p5p  { background:#fefce8; border-color:#fde047; }
+  .c-coq  { background:#fef2f2; border-color:#fca5a5; }
+  .c-ala  { background:#f0fdf4; border-color:#86efac; }
+  .c-alcar{ background:#fffbeb; border-color:#fcd34d; }
+  .c-nac  { background:#f8fafc; border-color:#94a3b8; }
+  .c-maca { background:#fef2f2; border-color:#f87171; }
+  .c-omega{ background:#fefce8; border-color:#ca8a04; }
+  .c-unk  { background:#f1f5f9; border-color:#cbd5e1; border-style:dashed; }
+
+  .t-am  { background:#fef3c7; color:#92400e; }
+  .t-lun { background:#dcfce7; color:#14532d; }
+  .t-bed { background:#ede9fe; color:#4c1d95; }
+
+  .ext { background:rgba(167,139,250,0.08); border:1px dashed rgba(167,139,250,0.3); border-radius:8px; padding:7px 10px; margin-top:8px; }
+  .ext p { font-size:0.56rem; color:#c4b5fd; }
+  .ext span { font-size:0.48rem; color:#64748b; display:block; margin-top:1px; }
+</style>
+</head>
+<body>
+<div class="box-wrap">
+
+<h2>💊 Pill Box — FINAL Layout</h2>
+<p class="subtitle">All confirmed ✅ · 盒蓋向上掀</p>
+
+<!-- Direction indicator -->
+<div class="dir"><span class="dir-arrow">☝️</span> 盒蓋向上掀（遠離你）</div>
+<div class="dir-box"><span>← 左</span><span>右 →</span></div>
+
+<div class="shell">
+  <div class="shell-label">▲ 盒蓋連接側（遠離你）</div>
+
+  <!-- UPPER TRAY: 5 cols L→R -->
+  <div class="tray-sep"><div class="ln"></div><span>上層抽屜 — 5格</span><div class="ln"></div></div>
+  <div class="tray">
+    <div class="upper-grid">
+
+      <!-- 1 LEFT: split — K2+E top / Zinc bottom -->
+      <div class="cell upper" style="background:#f8fafc;border-color:#94a3b8;display:flex;flex-direction:column;gap:4px;padding:5px;">
+        <div style="background:#eff6ff;border:1px solid #93c5fd;border-radius:5px;padding:5px;flex:1;display:flex;flex-direction:column;justify-content:space-between;">
+          <div>
+            <div class="pills">
+              <div class="p-tab" style="background:#93c5fd"></div>
+              <div class="p-tab" style="background:#c4b5fd"></div>
+              <div class="p-tab" style="background:#93c5fd"></div>
+              <div class="p-tab" style="background:#c4b5fd"></div>
+            </div>
+            <div class="cname">Vit K2 + E</div>
+            <div class="cdose">MK-7 · Tocotrienol</div>
+          </div>
+          <span class="ctag t-lun" style="font-size:0.38rem">☀️ 午餐</span>
+        </div>
+        <div style="background:#ecfeff;border:1px solid #67e8f9;border-radius:5px;padding:5px;flex:1;display:flex;flex-direction:column;justify-content:space-between;">
+          <div>
+            <div class="pills">
+              <div class="p-md" style="background:#67e8f9"></div>
+              <div class="p-md" style="background:#22d3ee"></div>
+              <div class="p-md" style="background:#67e8f9"></div>
+            </div>
+            <div class="cname">Zinc + Cu</div>
+            <div class="cdose">30mg Zn · 2mg Cu</div>
+          </div>
+          <span class="ctag t-lun" style="font-size:0.38rem">☀️ 午餐</span>
+        </div>
+      </div>
+
+      <!-- 2: B-Complex orange caps -->
+      <div class="cell upper c-bco">
+        <div>
+          <div class="pills">
+            <div class="p-lg" style="background:#f97316"></div>
+            <div class="p-lg" style="background:#fb923c"></div>
+            <div class="p-lg" style="background:#f97316"></div>
+            <div class="p-lg" style="background:#fb923c"></div>
+            <div class="p-lg" style="background:#f97316"></div>
+          </div>
+          <div class="cname">B-Complex</div>
+          <div class="csub">甲基化 · 橙色膠囊</div>
+          <div class="cdose">1粒/日</div>
+        </div>
+        <span class="ctag t-lun">☀️ 午餐</span>
+      </div>
+
+      <!-- 3: P5P pale yellow round tabs (many) -->
+      <div class="cell upper c-p5p">
+        <div>
+          <div class="pills">
+            <div class="p-tab" style="background:#fde047"></div>
+            <div class="p-tab" style="background:#fef08a"></div>
+            <div class="p-tab" style="background:#fde047"></div>
+            <div class="p-tab" style="background:#fef08a"></div>
+            <div class="p-tab" style="background:#fde047"></div>
+            <div class="p-tab" style="background:#fef08a"></div>
+            <div class="p-tab" style="background:#fde047"></div>
+            <div class="p-tab" style="background:#fef08a"></div>
+            <div class="p-tab" style="background:#fde047"></div>
+          </div>
+          <div class="cname">P5P</div>
+          <div class="csub">淺黃圓片</div>
+          <div class="cdose">Active B6</div>
+        </div>
+        <span class="ctag t-lun">☀️ 午餐</span>
+      </div>
+
+      <!-- 4: CoQ10 red large caps -->
+      <div class="cell upper c-coq">
+        <div>
+          <div class="pills">
+            <div class="p-lg" style="background:#ef4444"></div>
+            <div class="p-lg" style="background:#dc2626"></div>
+            <div class="p-lg" style="background:#ef4444"></div>
+            <div class="p-lg" style="background:#b91c1c"></div>
+            <div class="p-lg" style="background:#ef4444"></div>
+          </div>
+          <div class="cname">CoQ10 Ubiquinol</div>
+          <div class="csub">紅色大膠囊</div>
+          <div class="cdose">100–200 mg</div>
+        </div>
+        <span class="ctag t-lun">☀️ 午餐</span>
+      </div>
+
+      <!-- 5 RIGHT: split — ALA top + ALCAR bottom -->
+      <div class="cell upper" style="background:#f8fafc;border-color:#94a3b8;display:flex;flex-direction:column;gap:4px;padding:5px;">
+        <div class="c-ala" style="border:1px solid #86efac;border-radius:5px;padding:5px;flex:1;display:flex;flex-direction:column;justify-content:space-between;">
+          <div>
+            <div class="pills">
+              <div class="p-md" style="background:#86efac"></div>
+              <div class="p-md" style="background:#4ade80"></div>
+              <div class="p-md" style="background:#86efac"></div>
+            </div>
+            <div class="cname">R-ALA</div>
+            <div class="cdose">300–600 mg</div>
+          </div>
+          <span class="ctag t-am" style="font-size:0.38rem">🌅 早上</span>
+        </div>
+        <div class="c-alcar" style="border:1px solid #fcd34d;border-radius:5px;padding:5px;flex:1;display:flex;flex-direction:column;justify-content:space-between;">
+          <div>
+            <div class="pills">
+              <div class="p-md" style="background:#fde68a"></div>
+              <div class="p-md" style="background:#fef3c7"></div>
+              <div class="p-md" style="background:#fde68a"></div>
+            </div>
+            <div class="cname">ALCAR</div>
+            <div class="cdose">500 mg</div>
+          </div>
+          <span class="ctag t-am" style="font-size:0.38rem">🌅 早上</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- LOWER MAIN TRAY -->
+  <div class="tray-sep"><div class="ln"></div><span>下層主抽屜</span><div class="ln"></div></div>
+  <div class="tray">
+    <div class="lower-outer">
+
+      <!-- LEFT col: NAC morning (top) + Maca (bottom) -->
+      <div class="lower-left">
+        <div class="cell lsm c-nac">
+          <div>
+            <div class="pills">
+              <div class="p-md" style="background:#cbd5e1"></div>
+              <div class="p-md" style="background:#e2e8f0"></div>
+              <div class="p-md" style="background:#cbd5e1"></div>
+              <div class="p-md" style="background:#e2e8f0"></div>
+            </div>
+            <div class="cname">NAC</div>
+            <div class="csub">白色膠囊 · 早</div>
+            <div class="cdose">800 mg</div>
+          </div>
+          <span class="ctag t-am">🌅 早上</span>
+        </div>
+        <div class="cell lsm c-maca">
+          <div>
+            <div class="pills">
+              <div class="p-lg" style="background:#cbd5e1"></div>
+              <div class="p-lg" style="background:#e2e8f0"></div>
+              <div class="p-lg" style="background:#cbd5e1"></div>
+              <div class="p-lg" style="background:#e2e8f0"></div>
+            </div>
+            <div class="cname">Maca ✅</div>
+            <div class="csub">黑色糊化 · 左下角</div>
+            <div class="cdose">1500–3000 mg</div>
+          </div>
+          <span class="ctag t-lun">☀️ 午餐</span>
+        </div>
+      </div>
+
+      <!-- CENTER: Omega-3 big bag -->
+      <div class="cell llg c-omega">
+        <div>
+          <div class="pills" style="min-height:55px">
+            <div class="p-xl" style="background:#eab308;width:25px;height:13px;"></div>
+            <div class="p-xl" style="background:#ca8a04;width:25px;height:13px;"></div>
+            <div class="p-xl" style="background:#eab308;width:25px;height:13px;"></div>
+            <div class="p-xl" style="background:#ca8a04;width:25px;height:13px;"></div>
+            <div class="p-xl" style="background:#eab308;width:25px;height:13px;"></div>
+            <div class="p-xl" style="background:#ca8a04;width:25px;height:13px;"></div>
+            <div class="p-xl" style="background:#eab308;width:25px;height:13px;"></div>
+            <div class="p-xl" style="background:#ca8a04;width:25px;height:13px;"></div>
+          </div>
+          <div class="cname">Omega-3 rTG</div>
+          <div class="csub">大黃軟膠囊 · 袋裝</div>
+          <div class="cdose">2000 mg ea</div>
+        </div>
+        <span class="ctag t-lun">☀️ 午餐</span>
+      </div>
+
+      <!-- RIGHT col: 2 stacked -->
+      <div class="lower-right">
+        <div class="cell lsm c-nac">
+          <div>
+            <div class="pills">
+              <div class="p-md" style="background:#cbd5e1"></div>
+              <div class="p-md" style="background:#e2e8f0"></div>
+              <div class="p-md" style="background:#cbd5e1"></div>
+            </div>
+            <div class="cname">NAC</div>
+            <div class="csub">白色膠囊 · 晚</div>
+            <div class="cdose">800 mg</div>
+          </div>
+          <span class="ctag t-bed">🌙 睡前</span>
+        </div>
+        <div class="cell lsm c-alcar">
+          <div>
+            <div class="pills">
+              <div class="p-md" style="background:#fde68a"></div>
+              <div class="p-md" style="background:#fef3c7"></div>
+              <div class="p-md" style="background:#fde68a"></div>
+              <div class="p-md" style="background:#fef3c7"></div>
+            </div>
+            <div class="cname">ALCAR</div>
+            <div class="csub">Acetyl-L-Carnitine</div>
+            <div class="cdose">500 mg</div>
+          </div>
+          <span class="ctag t-am">🌅 早上</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="shell-label">▼ 靠近你（開口/扣側）</div>
+</div>
+
+
+
+</div>
+</body>
+</html>
