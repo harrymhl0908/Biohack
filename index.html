@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="zh-HK">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="BioHack">
+    <meta name="theme-color" content="#0a0f1e">
+    <meta name="mobile-web-app-capable" content="yes">
+    <link rel="manifest" href="./manifest.json">
+    <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'><rect fill='%230a0f1e' width='180' height='180' rx='40'/><text x='90' y='125' text-anchor='middle' font-size='110'>💊</text></svg>">
+    <title>BioHack v17.1</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=JetBrains+Mono:wght@500;700&display=swap');
+        *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;-webkit-touch-callout:none;}
+        :root{
+            --bg:#0a0f1e;--card:#1a2236;--border:rgba(255,255,255,0.06);
+            --text:#e2e8f0;--dim:#94a3b8;--muted:#64748b;
+            --em:#34d399;--am:#fbbf24;--rd:#f87171;--bl:#60a5fa;
+            --pk:#f472b6;--ind:#818cf8;--cy:#22d3ee;--pu:#a78bfa;--og:#fb923c;
+            --st:env(safe-area-inset-top,0px);--sb:env(safe-area-inset-bottom,0px);
+        }
+        body{font-family:'Noto Sans TC',-apple-system,sans-serif;background:var(--bg);color:var(--text);min-height:100dvh;overflow-x:hidden;padding-bottom:calc(66px + var(--sb));overscroll-behavior-y:contain;}
+        .mono{font-family:'JetBrains Mono',monospace;}
+        .hd{position:sticky;top:0;z-index:50;background:rgba(10,15,30,0.9);backdrop-filter:blur(20px) saturate(1.5);-webkit-backdrop-filter:blur(20px) saturate(1.5);border-bottom:1px solid var(--border);padding:12px 18px;padding-top:calc(12px + var(--st));}
+        .hd h1{font-size:1rem;font-weight:700;color:white;display:flex;align-items:center;gap:6px;flex-wrap:wrap;}
+        .hd h1 em{color:var(--em);font-style:normal;}
+        .hd-s{font-size:0.55rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.1em;margin-top:1px;}
+        .hb{display:inline-block;font-size:0.48rem;padding:2px 5px;border-radius:3px;font-weight:700;background:rgba(251,146,60,0.15);color:var(--og);border:1px solid rgba(251,146,60,0.3);}
+        .tb{position:fixed;bottom:0;left:0;right:0;z-index:50;background:rgba(10,15,30,0.94);backdrop-filter:blur(20px) saturate(1.5);-webkit-backdrop-filter:blur(20px) saturate(1.5);border-top:1px solid var(--border);display:flex;padding-bottom:var(--sb);}
+        .t{flex:1;display:flex;flex-direction:column;align-items:center;padding:8px 2px 6px;background:none;border:none;color:var(--muted);font-size:0.48rem;font-family:'Noto Sans TC',sans-serif;font-weight:500;cursor:pointer;gap:2px;}
+        .t i{font-size:1.05rem;font-style:normal;line-height:1;}
+        .t.a{color:var(--em);}
+        .t:active{transform:scale(0.93);}
+        .ct{padding:14px 16px;max-width:600px;margin:0 auto;}
+        .s{display:none;}.s.a{display:block;}
+        .st{font-size:1.15rem;font-weight:700;color:white;margin-bottom:3px;}
+        .ss{font-size:0.68rem;color:var(--muted);margin-bottom:16px;line-height:1.5;}
+        .bk{background:var(--card);border-radius:14px;margin-bottom:8px;border:1px solid var(--border);overflow:hidden;}
+        .bh{display:flex;align-items:center;justify-content:space-between;padding:13px 14px;cursor:pointer;user-select:none;-webkit-user-select:none;}
+        .bhl{display:flex;align-items:center;gap:10px;}
+        .dot{width:32px;height:32px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-weight:700;color:white;font-size:0.78rem;flex-shrink:0;}
+        .bl{font-weight:700;color:white;font-size:0.85rem;}
+        .bs{font-size:0.58rem;color:var(--muted);margin-top:2px;display:flex;align-items:center;gap:4px;flex-wrap:wrap;}
+        .bhr{display:flex;align-items:center;gap:6px;}
+        .bc{font-size:0.55rem;color:var(--muted);background:rgba(255,255,255,0.05);padding:2px 6px;border-radius:6px;}
+        .cv{color:var(--muted);transition:transform 0.2s;font-size:0.8rem;}
+        .bk.o .cv{transform:rotate(180deg);}
+        .bb{max-height:0;overflow:hidden;transition:max-height 0.3s ease;}
+        .bk.o .bb{max-height:3000px;}
+        .bi{padding:0 12px 12px;}
+        .g{display:inline-block;font-size:0.48rem;padding:1px 5px;border-radius:3px;font-weight:700;vertical-align:middle;}
+        .ge{background:#1e3a8a;color:#93c5fd;}.gf{background:#14532d;color:#86efac;}
+        .gh{background:#7f1d1d;color:#fca5a5;}.gl{background:#4c1d95;color:#c4b5fd;}
+        .gn{background:#164e63;color:#67e8f9;}.gw{background:#78350f;color:#fcd34d;}
+        .gr{background:rgba(251,146,60,0.15);color:var(--og);border:1px solid rgba(251,146,60,0.25);}
+        .gx{background:rgba(244,114,182,0.15);color:var(--pk);border:1px solid rgba(244,114,182,0.25);}
+        .r{display:flex;align-items:center;justify-content:space-between;padding:10px 11px;border-radius:10px;background:rgba(255,255,255,0.02);margin-bottom:4px;gap:8px;}
+        .r:last-child{margin-bottom:0;}
+        .r.ri{background:rgba(251,146,60,0.04);border:1px solid rgba(251,146,60,0.12);}
+        .r.rw{border:1px solid rgba(239,68,68,0.2);}
+        .r.rx{background:rgba(244,114,182,0.04);border:1px solid rgba(244,114,182,0.12);}
+        .r.hl{border-left:3px solid;}
+        .rn{font-weight:700;font-size:0.78rem;}
+        .rno{font-size:0.55rem;color:var(--muted);margin-top:1px;line-height:1.35;}
+        .rwa{font-size:0.55rem;color:var(--rd);margin-top:1px;opacity:0.85;}
+        .rrn{font-size:0.55rem;color:var(--og);margin-top:1px;line-height:1.35;}
+        .rxn{font-size:0.55rem;color:var(--pk);margin-top:1px;line-height:1.35;}
+        .rd{font-family:'JetBrains Mono',monospace;font-weight:700;font-size:0.75rem;color:var(--am);text-align:right;flex-shrink:0;white-space:nowrap;}
+        .rda{font-family:'JetBrains Mono',monospace;font-weight:700;font-size:0.65rem;color:var(--og);text-align:right;margin-top:1px;}
+        .rds{font-size:0.55rem;color:var(--muted);text-align:right;margin-top:1px;}
+        .rl{flex:1;min-width:0;}.rr{flex-shrink:0;text-align:right;}
+        .o5{opacity:0.5;}
+        .si{background:var(--card);border-radius:11px;padding:12px 14px;margin-bottom:6px;border:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;gap:8px;}
+        .si.rc{border-color:rgba(251,146,60,0.15);background:rgba(251,146,60,0.03);}
+        .si.sx{border-color:rgba(244,114,182,0.15);background:rgba(244,114,182,0.03);}
+        .sil{flex:1;min-width:0;}.sin{font-weight:700;font-size:0.78rem;}
+        .sim{font-size:0.55rem;color:var(--muted);margin-top:2px;display:flex;gap:5px;flex-wrap:wrap;align-items:center;}
+        .sid{font-family:'JetBrains Mono',monospace;font-weight:700;font-size:0.75rem;color:var(--am);white-space:nowrap;}
+        .gc{background:var(--card);border-radius:12px;padding:12px 14px;margin-bottom:7px;border:1px solid var(--border);}
+        .gcn{font-weight:700;font-size:0.8rem;color:white;margin-bottom:5px;display:flex;align-items:center;gap:5px;flex-wrap:wrap;}
+        .gr2{display:flex;justify-content:space-between;align-items:flex-start;padding:4px 0;border-bottom:1px solid rgba(255,255,255,0.03);gap:6px;}
+        .gr2:last-child{border-bottom:none;}
+        .grl{font-size:0.58rem;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:0.03em;flex-shrink:0;width:48px;}
+        .grv{font-size:0.66rem;color:var(--dim);line-height:1.4;flex:1;}
+        .grv strong{color:var(--em);font-weight:700;}
+        .grv .av{color:var(--rd);font-weight:600;}
+        .grv .ok{color:var(--am);}
+        .grb{font-size:0.55rem;color:var(--muted);font-style:italic;}
+        .wc{background:rgba(245,158,11,0.06);border:1px solid rgba(245,158,11,0.15);border-radius:11px;padding:12px 14px;margin-bottom:6px;}
+        .wc.cr{background:rgba(239,68,68,0.06);border-color:rgba(239,68,68,0.2);}
+        .wt{font-size:0.75rem;font-weight:700;color:var(--am);margin-bottom:4px;}
+        .wt.wr{color:var(--rd);}.wt.wp{color:var(--pk);}
+        .wx{font-size:0.65rem;color:var(--dim);line-height:1.55;}
+        .wx em{color:var(--muted);display:block;margin-top:3px;}
+        .ci{background:rgba(16,185,129,0.06);border:1px solid rgba(16,185,129,0.15);border-radius:11px;padding:12px 14px;margin-bottom:6px;}
+        .ci.co{background:rgba(251,146,60,0.06);border-color:rgba(251,146,60,0.15);}
+        .cit{font-size:0.75rem;font-weight:700;color:var(--em);margin-bottom:3px;}
+        .cit.oo{color:var(--og);}
+        .cid{font-size:0.65rem;color:var(--dim);line-height:1.5;}
+        .cid em{color:var(--muted);font-style:italic;display:block;margin-top:2px;}
+        .disc{background:rgba(239,68,68,0.06);border:1px solid rgba(239,68,68,0.15);border-radius:11px;padding:12px 14px;margin-top:12px;}
+        .disc p{font-size:0.65rem;color:var(--dim);line-height:1.5;}
+        .disc strong{color:var(--rd);font-size:0.7rem;}
+        .ld{margin:14px 0 6px;padding:0 3px;font-size:0.62rem;font-weight:700;letter-spacing:0.04em;}
+        ::-webkit-scrollbar{width:0px;}
+        /* Install banner */
+        .install-banner{display:none;position:fixed;top:0;left:0;right:0;z-index:100;background:linear-gradient(135deg,#059669,#10b981);padding:14px 18px;padding-top:calc(14px + var(--st));text-align:center;box-shadow:0 4px 20px rgba(0,0,0,0.3);}
+        .install-banner p{font-size:0.72rem;color:white;font-weight:600;line-height:1.5;}
+        .install-banner .steps{font-size:0.62rem;color:rgba(255,255,255,0.85);margin-top:4px;}
+        .install-banner button{margin-top:8px;background:rgba(255,255,255,0.2);border:1px solid rgba(255,255,255,0.3);color:white;padding:6px 16px;border-radius:8px;font-size:0.65rem;font-weight:600;cursor:pointer;font-family:'Noto Sans TC',sans-serif;}
+    </style>
+</head>
+<body>
+
+<!-- Install prompt for first-time visitors -->
+<div id="install-banner" class="install-banner">
+    <p>📲 加到主畫面即變獨立 App</p>
+    <div class="steps">撳底部 <strong>⬆️ 分享</strong> → <strong>加至主畫面</strong></div>
+    <button onclick="dismissInstall()">明白了</button>
+</div>
+
+<div class="hd">
+    <h1>💊 BioHack <em class="mono">v17.1</em> <span class="hb">RECOVERY</span></h1>
+    <div class="hd-s">Meth Recovery — Supplement Tracker</div>
+</div>
+
+<div class="ct">
+
+<!-- ========== TIMELINE ========== -->
+<div id="p-tl" class="s a">
+<div class="st">精確時間軸</div>
+<div class="ss">🟡 Recovery &nbsp; 🩷 性功能 &nbsp; 撳展開詳情</div>
+
+<!-- MORNING -->
+<div class="bk o" data-id="m" onclick="tg(this)">
+<div class="bh"><div class="bhl"><div class="dot" style="background:linear-gradient(135deg,#2563eb,#3b82f6)">早</div><div><div class="bl">起床後 (空腹)</div><div class="bs"><span class="g ge">必須空腹</span></div></div></div><div class="bhr"><span class="bc">7項</span><span class="cv">▼</span></div></div>
+<div class="bb"><div class="bi">
+<div class="r ri"><div class="rl"><div class="rn">NAC</div><div class="rno">抗氧化 / 谷氨酸調節</div><div class="rrn">🟡 加量 800mg</div></div><div class="rr"><div class="rd">800 mg</div><div class="rds">原600→800</div></div></div>
+<div class="r"><div class="rl"><div class="rn" style="color:#fde68a">ALCAR</div><div class="rno">粒線體能量 / 認知</div></div><div class="rd">500 mg</div></div>
+<div class="r" style="border:1px solid rgba(34,211,238,0.15)"><div class="rl"><div class="rn" style="color:#67e8f9">ALA (R-ALA)</div><div class="rno">抗氧化 <span class="g gn">已搬</span></div></div><div class="rd">300-600 mg</div></div>
+<div class="r rw"><div class="rl"><div class="rn" style="color:#fda4af">L-Tyrosine</div><div class="rwa">⚠️ 非甲亢 + 非MAOI</div><div class="rrn">🔴 首6月暫停</div></div><div class="rr"><div class="rd">500-1000 mg</div><div class="rda">Recovery: 暫停</div></div></div>
+<div class="r ri"><div class="rl"><div class="rn" style="color:var(--og)">Vitamin C (Liposomal)</div><div class="rno">抗氧化 + 加速排出</div><div class="rrn">🟡 Recovery</div></div><div class="rr"><div class="rd">1000 mg</div><div class="rds"><span class="g gr">Rec</span></div></div></div>
+<div class="r o5"><div class="rl"><div class="rn" style="color:#c4b5fd">Tru Niagen</div><div class="rno">NAD+ (Optional)</div></div><div class="rd">300 mg</div></div>
+<div class="r ri"><div class="rl"><div class="rn" style="color:var(--og)">Multivitamin (甲基化)</div><div class="rrn">🟡 Recovery</div></div><div class="rr"><div class="rd">1 粒</div><div class="rds"><span class="g gr">Rec</span></div></div></div>
+</div></div></div>
+
+<!-- LUNCH -->
+<div class="bk" data-id="l" onclick="tg(this)">
+<div class="bh"><div class="bhl"><div class="dot" style="background:linear-gradient(135deg,#059669,#10b981)">午</div><div><div class="bl">第一餐 (隨餐)</div><div class="bs"><span class="g gf">必須飽肚</span></div></div></div><div class="bhr"><span class="bc">13項</span><span class="cv">▼</span></div></div>
+<div class="bb"><div class="bi">
+<div class="r hl" style="border-color:var(--rd)"><div class="rl"><div class="rn" style="color:#fca5a5">CoQ10 (Ubiquinol)</div><div class="rno">心臟發電機 <span class="g gh">護心</span></div></div><div class="rd">100-200 mg</div></div>
+<div class="r hl" style="border-color:var(--pu)"><div class="rl"><div class="rn" style="color:#c4b5fd">Tocotrienols (Annatto)</div><div class="rno">腦部修復 <span class="g gl">頂級</span></div></div><div class="rd">100 mg</div></div>
+<div class="r" style="border:1px solid rgba(34,211,238,0.15)"><div class="rl"><div class="rn" style="color:#fdba74">Zinc Picolinate + Cu</div><div class="rno">免疫 <span class="g gn">已加銅</span></div><div class="rwa">⚠️ 空腹會嘔</div></div><div class="rr"><div class="rd">30mg Zn</div><div class="rds" style="color:var(--cy)">1-2mg Cu</div></div></div>
+<div class="r"><div class="rl"><div class="rn">Vit D3+K2 (MK-7)</div><div class="rno" style="color:var(--am)">📊 每3-6月驗25(OH)D</div></div><div class="rd">5000 IU</div></div>
+<div class="r"><div class="rl"><div class="rn">Omega-3 (rTG)</div><div class="rno">EPA+DHA 抗炎</div></div><div class="rd">2000 mg</div></div>
+<div class="r"><div class="rl"><div class="rn" style="color:#fde68a">B-Complex (甲基化)</div><div class="rno">已含P5P <span class="g gw">勿重複</span></div></div><div class="rd">1 粒</div></div>
+<div class="r rw"><div class="rl"><div class="rn">Maca (黑色糊化)</div><div class="rno">荷爾蒙 / 精力</div><div class="rrn">🟡 有刺激性，留意焦慮</div></div><div class="rd">1500-3000 mg</div></div>
+<div class="r ri"><div class="rl"><div class="rn" style="color:var(--og)">PS (Sunflower)</div><div class="rno">調節皮質醇</div><div class="rrn">🟡 Recovery</div></div><div class="rr"><div class="rd">100-200 mg</div><div class="rds"><span class="g gr">Rec</span></div></div></div>
+<div class="r ri"><div class="rl"><div class="rn" style="color:var(--og)">Vitamin C 第2劑</div><div class="rno">隨餐減胃刺激</div></div><div class="rr"><div class="rd">500-1000 mg</div><div class="rds"><span class="g gr">Rec</span></div></div></div>
+<div class="r ri"><div class="rl"><div class="rn" style="color:var(--og)">Whey Isolate</div><div class="rno">肌肉 + 神經遞質原料</div><div class="rrn">🟡 Recovery</div></div><div class="rr"><div class="rd">20-30 g</div><div class="rds"><span class="g gr">Rec</span></div></div></div>
+<div class="r rx"><div class="rl"><div class="rn" style="color:var(--pk)">DHEA (Micronized)</div><div class="rno">荷爾蒙前體</div><div class="rxn">🩷 需先驗 DHEA-S</div></div><div class="rr"><div class="rd">25-50 mg</div><div class="rds"><span class="g gx">性功能</span></div></div></div>
+<div class="r rx"><div class="rl"><div class="rn" style="color:var(--pk)">Tongkat Ali (100:1)</div><div class="rno">睾酮 + 性功能</div><div class="rxn">🩷 LJ100® / Physta®</div></div><div class="rr"><div class="rd">200-400 mg</div><div class="rds"><span class="g gx">性功能</span></div></div></div>
+</div></div></div>
+
+<!-- PRE-WORKOUT -->
+<div class="bk" data-id="w" onclick="tg(this)">
+<div class="bh"><div class="bhl"><div class="dot" style="background:linear-gradient(135deg,#db2777,#ec4899)">動</div><div><div class="bl">訓練前 30min</div><div class="bs"><span class="g ge">空腹/半飽</span></div></div></div><div class="bhr"><span class="bc">2項</span><span class="cv">▼</span></div></div>
+<div class="bb"><div class="bi">
+<div class="r rw hl" style="border-color:var(--pk)"><div class="rl"><div class="rn" style="color:#f9a8d4">Citrulline Malate 2:1</div><div class="rno">血管擴張 / NO勃起功能</div><div class="rrn">🟡 確認當日冇用meth</div></div><div class="rd">6-8 g</div></div>
+<div class="r"><div class="rl"><div class="rn">Creatine (Creapure)</div><div class="rno">肌力 / 認知</div></div><div class="rd">5 g</div></div>
+</div></div></div>
+
+<!-- BEDTIME -->
+<div class="bk" data-id="n" onclick="tg(this)">
+<div class="bh"><div class="bhl"><div class="dot" style="background:linear-gradient(135deg,#4f46e5,#6366f1)">晚</div><div><div class="bl">睡前</div><div class="bs"><span class="g ge">可空腹</span></div></div></div><div class="bhr"><span class="bc">6項</span><span class="cv">▼</span></div></div>
+<div class="bb"><div class="bi">
+<div class="r"><div class="rl"><div class="rn" style="color:#a5b4fc">Mag Bisglycinate</div><div class="rno">放鬆 / 深層睡眠</div></div><div class="rd">400 mg</div></div>
+<div class="r ri"><div class="rl"><div class="rn">NAC 第2劑</div><div class="rrn">🟡 加量至 800mg</div></div><div class="rr"><div class="rd">800 mg</div><div class="rds">原600→800</div></div></div>
+<div class="r"><div class="rl"><div class="rn" style="color:#67e8f9">Collagen Peptides</div><div class="rno">關節 / 皮膚</div></div><div class="rd">10-20 g</div></div>
+<div class="r ri"><div class="rl"><div class="rn" style="color:var(--og)">L-Theanine (Suntheanine)</div><div class="rrn">🟡 紓緩焦慮</div></div><div class="rr"><div class="rd">200-400 mg</div><div class="rds"><span class="g gr">Rec</span></div></div></div>
+<div class="r ri"><div class="rl"><div class="rn" style="color:var(--og)">Melatonin (舌下)</div><div class="rno">重建晝夜節律</div><div class="rrn">🟡 低劑量開始</div></div><div class="rr"><div class="rd">0.5-3 mg</div><div class="rds"><span class="g gr">Rec</span></div></div></div>
+<div class="r ri o5"><div class="rl"><div class="rn" style="color:var(--og)">NAC 第3劑 (Opt)</div><div class="rno">如目標2400mg/日</div></div><div class="rr"><div class="rd">+800 mg</div><div class="rds"><span class="g gr">Rec</span></div></div></div>
+</div></div></div>
+</div>
+
+<!-- ========== GUIDE ========== -->
+<div id="p-gd" class="s">
+<div class="st">💊 選購指南</div>
+<div class="ss"><strong style="color:var(--em)">✓ 推薦</strong> &nbsp; <strong style="color:var(--rd)">✗ 避免</strong></div>
+
+<div class="ld" style="color:var(--em)">🕒 早上空腹組</div>
+
+<div class="gc"><div class="gcn">NAC <span class="g gr">加量</span></div><div class="gr2"><div class="grl">推薦</div><div class="grv"><strong>N-Acetyl-L-Cysteine</strong>。高劑量選 sustained-release。</div></div><div class="gr2"><div class="grl">避免</div><div class="grv"><span class="av">L-Cysteine（唔係NAC）</span></div></div><div class="gr2"><div class="grl">參考</div><div class="grv grb">Jarrow NAC Sustain / NOW NAC</div></div></div>
+
+<div class="gc"><div class="gcn">ALCAR</div><div class="gr2"><div class="grl">推薦</div><div class="grv"><strong>Acetyl-L-Carnitine HCl</strong> — 過血腦屏障。</div></div><div class="gr2"><div class="grl">避免</div><div class="grv"><span class="av">L-Carnitine Tartrate（唔過血腦屏障）</span></div></div><div class="gr2"><div class="grl">參考</div><div class="grv grb">NOW ALCAR / Jarrow ALCAR</div></div></div>
+
+<div class="gc"><div class="gcn">ALA</div><div class="gr2"><div class="grl">推薦</div><div class="grv"><strong>R-ALA</strong> 天然活性。更好：<span class="ok">Na-R-ALA 鈉鹽穩定型</span>。</div></div><div class="gr2"><div class="grl">避免</div><div class="grv"><span class="av">Racemic ALA（含50%無效S-ALA）</span></div></div><div class="gr2"><div class="grl">參考</div><div class="grv grb">Doctor's Best Stabilized R-ALA</div></div></div>
+
+<div class="gc"><div class="gcn">L-Tyrosine</div><div class="gr2"><div class="grl">推薦</div><div class="grv"><strong>Free-form L-Tyrosine</strong>。</div></div><div class="gr2"><div class="grl">避免</div><div class="grv"><span class="av">NALT — 轉化率低</span></div></div></div>
+
+<div class="gc"><div class="gcn">Vitamin C <span class="g gr">Rec</span></div><div class="gr2"><div class="grl">推薦</div><div class="grv"><strong>Liposomal Vitamin C</strong>。次選 <span class="ok">Ester-C</span>。</div></div><div class="gr2"><div class="grl">避免</div><div class="grv"><span class="av">普通 Ascorbic Acid 高劑量（易肚瀉）</span></div></div><div class="gr2"><div class="grl">參考</div><div class="grv grb">LivOn Liposomal / NOW Ester-C</div></div></div>
+
+<div class="gc"><div class="gcn">Multivitamin <span class="g gr">Rec</span></div><div class="gr2"><div class="grl">推薦</div><div class="grv"><strong>含甲基化 B 群</strong>（Methylfolate + Methylcobalamin）。避免含鐵。</div></div><div class="gr2"><div class="grl">避免</div><div class="grv"><span class="av">Folic Acid + Cyanocobalamin（合成型）</span></div></div><div class="gr2"><div class="grl">參考</div><div class="grv grb">Thorne Basic Nutrients / Pure Encapsulations ONE</div></div></div>
+
+<div class="ld" style="color:var(--em)">🍽️ 午餐隨餐組</div>
+
+<div class="gc"><div class="gcn">CoQ10 <span class="g gh">護心</span></div><div class="gr2"><div class="grl">推薦</div><div class="grv"><strong>Ubiquinol（還原型）</strong>— 吸收比 Ubiquinone 高 3-8x。Meth 使用者轉化能力差。</div></div><div class="gr2"><div class="grl">避免</div><div class="grv"><span class="av">Ubiquinone（氧化型）</span></div></div><div class="gr2"><div class="grl">參考</div><div class="grv grb">Jarrow QH-absorb (Kaneka)</div></div></div>
+
+<div class="gc"><div class="gcn">Tocotrienols <span class="g gl">頂級</span></div><div class="gr2"><div class="grl">推薦</div><div class="grv"><strong>DeltaGold® Annatto</strong> — 唔含 tocopherols。</div></div><div class="gr2"><div class="grl">避免</div><div class="grv"><span class="av">Mixed Tocopherols/Tocotrienols</span></div></div><div class="gr2"><div class="grl">參考</div><div class="grv grb">Designs for Health Annatto-E</div></div></div>
+
+<div class="gc"><div class="gcn">Zinc + Copper</div><div class="gr2"><div class="grl">推薦</div><div class="grv"><strong>Zinc Picolinate / Bisglycinate</strong>。銅用 <strong>Cu Bisglycinate</strong>。</div></div><div class="gr2"><div class="grl">避免</div><div class="grv"><span class="av">Zinc Oxide（吸收~5%）</span></div></div><div class="gr2"><div class="grl">參考</div><div class="grv grb">Thorne Zinc Picolinate</div></div></div>
+
+<div class="gc"><div class="gcn">D3+K2</div><div class="gr2"><div class="grl">推薦</div><div class="grv"><strong>D3 + K2 MK-7</strong>。油基膠囊/液滴。</div></div><div class="gr2"><div class="grl">避免</div><div class="grv"><span class="av">D2 / K2 MK-4（半衰期短）</span></div></div><div class="gr2"><div class="grl">參考</div><div class="grv grb">Thorne D3/K2 Liquid</div></div></div>
+
+<div class="gc"><div class="gcn">Omega-3</div><div class="gr2"><div class="grl">推薦</div><div class="grv"><strong>rTG 形式</strong>。IFOS 5星。2000mg = EPA+DHA 總量。</div></div><div class="gr2"><div class="grl">避免</div><div class="grv"><span class="av">Ethyl Ester (EE)</span></div></div><div class="gr2"><div class="grl">參考</div><div class="grv grb">Nordic Naturals Ultimate / Carlson Elite</div></div></div>
+
+<div class="gc"><div class="gcn">B-Complex</div><div class="gr2"><div class="grl">推薦</div><div class="grv"><strong>全甲基化</strong>：5-MTHF + Methylcobalamin + P5P + Benfotiamine。</div></div><div class="gr2"><div class="grl">避免</div><div class="grv"><span class="av">Folic Acid + Cyanocobalamin（合成）</span></div></div><div class="gr2"><div class="grl">參考</div><div class="grv grb">Thorne B-Complex #12</div></div></div>
+
+<div class="gc"><div class="gcn">Maca</div><div class="gr2"><div class="grl">推薦</div><div class="grv"><strong>Gelatinized 黑色 Maca</strong>。</div></div><div class="gr2"><div class="grl">避免</div><div class="grv"><span class="av">Raw Maca（脹氣）</span></div></div></div>
+
+<div class="gc"><div class="gcn">PS <span class="g gr">Rec</span></div><div class="gr2"><div class="grl">推薦</div><div class="grv"><strong>Sunflower-derived</strong>。Sharp-PS®。</div></div><div class="gr2"><div class="grl">避免</div><div class="grv"><span class="av">Soy-derived</span></div></div><div class="gr2"><div class="grl">參考</div><div class="grv grb">Doctor's Best PS (Sharp-PS)</div></div></div>
+
+<div class="gc"><div class="gcn">Whey <span class="g gr">Rec</span></div><div class="gr2"><div class="grl">推薦</div><div class="grv"><strong>Isolate (WPI)</strong> >90%。乳糖不耐：<span class="ok">Pea+Rice</span>。</div></div><div class="gr2"><div class="grl">避免</div><div class="grv"><span class="av">Concentrate / 大量甜味劑</span></div></div><div class="gr2"><div class="grl">參考</div><div class="grv grb">ON Gold Isolate / Dymatize ISO100</div></div></div>
+
+<div class="gc"><div class="gcn" style="color:var(--pk)">DHEA <span class="g gx">性功能</span></div><div class="gr2"><div class="grl">推薦</div><div class="grv"><strong>Micronized DHEA</strong>。先驗 DHEA-S。</div></div><div class="gr2"><div class="grl">避免</div><div class="grv"><span class="av">>50mg 非微粒化</span></div></div><div class="gr2"><div class="grl">參考</div><div class="grv grb">Pure Encapsulations DHEA 25mg</div></div></div>
+
+<div class="gc"><div class="gcn" style="color:var(--pk)">Tongkat Ali <span class="g gx">性功能</span></div><div class="gr2"><div class="grl">推薦</div><div class="grv"><strong>標準化 100:1 / 200:1</strong>。LJ100® / Physta®。</div></div><div class="gr2"><div class="grl">避免</div><div class="grv"><span class="av">Raw powder / 無標準化</span></div></div><div class="gr2"><div class="grl">參考</div><div class="grv grb">Nootropics Depot / Solaray LJ100</div></div></div>
+
+<div class="ld" style="color:var(--em)">🏋️ 訓練前 + 🌙 睡前</div>
+
+<div class="gc"><div class="gcn">Citrulline</div><div class="gr2"><div class="grl">推薦</div><div class="grv"><strong>L-Citrulline Malate 2:1</strong>。粉裝。</div></div><div class="gr2"><div class="grl">避免</div><div class="grv"><span class="av">DL-Malate / Blend</span></div></div></div>
+
+<div class="gc"><div class="gcn">Creatine</div><div class="gr2"><div class="grl">推薦</div><div class="grv"><strong>Monohydrate Creapure®</strong>（>99.99%）。</div></div><div class="gr2"><div class="grl">避免</div><div class="grv"><span class="av">HCl / Kre-Alkalyn / EE</span></div></div></div>
+
+<div class="gc"><div class="gcn">Magnesium</div><div class="gr2"><div class="grl">推薦</div><div class="grv"><strong>Bisglycinate TRAACS®</strong>。400mg = elemental Mg。</div></div><div class="gr2"><div class="grl">避免</div><div class="grv"><span class="av">Oxide（~4%吸收）/ Citrate（肚瀉）</span></div></div></div>
+
+<div class="gc"><div class="gcn">Collagen</div><div class="gr2"><div class="grl">推薦</div><div class="grv"><strong>Hydrolyzed Peptides I & III</strong>。粉裝。</div></div><div class="gr2"><div class="grl">避免</div><div class="grv"><span class="av">Unhydrolyzed / Gelatin</span></div></div></div>
+
+<div class="gc"><div class="gcn">L-Theanine <span class="g gr">Rec</span></div><div class="gr2"><div class="grl">推薦</div><div class="grv"><strong>Suntheanine® L-Isomer</strong>。</div></div><div class="gr2"><div class="grl">避免</div><div class="grv"><span class="av">D,L-Theanine（D型冇效）</span></div></div></div>
+
+<div class="gc"><div class="gcn">Melatonin <span class="g gr">Rec</span></div><div class="gr2"><div class="grl">推薦</div><div class="grv"><strong>Sublingual 0.5-1mg</strong>。生理劑量效果好過高劑量。</div></div><div class="gr2"><div class="grl">避免</div><div class="grv"><span class="av">5-10mg（超生理，擾亂睡眠）</span></div></div></div>
+</div>
+
+<!-- ========== SHOPPING ========== -->
+<div id="p-sh" class="s">
+<div class="st">🛒 購物清單</div>
+<div class="ss">全部 25 種。已標明推薦形式。</div>
+
+<div class="si"><div class="sil"><div class="sin">NAC</div><div class="sim"><span>早+晚(+午)</span><span class="g gr">加量</span></div></div><div class="sid">1600-2400/日</div></div>
+<div class="si"><div class="sil"><div class="sin" style="color:#fde68a">ALCAR HCl</div><div class="sim"><span>早上</span></div></div><div class="sid">500 mg</div></div>
+<div class="si"><div class="sil"><div class="sin" style="color:#67e8f9">R-ALA</div><div class="sim"><span>早上</span><span class="g gn">已搬</span></div></div><div class="sid">300-600 mg</div></div>
+<div class="si"><div class="sil"><div class="sin" style="color:#fda4af">L-Tyrosine</div><div class="sim"><span>早上</span><span style="color:var(--rd);font-weight:700">首6月停</span></div></div><div class="sid">500-1000</div></div>
+<div class="si o5"><div class="sil"><div class="sin" style="color:#c4b5fd">Tru Niagen NR</div><div class="sim"><span>早上</span><span>Opt</span></div></div><div class="sid">300 mg</div></div>
+<div class="si"><div class="sil"><div class="sin" style="color:#fca5a5">CoQ10 Ubiquinol</div><div class="sim"><span>午餐</span><span class="g gh">護心</span></div></div><div class="sid">100-200 mg</div></div>
+<div class="si"><div class="sil"><div class="sin" style="color:#c4b5fd">Tocotrienols Annatto</div><div class="sim"><span>午餐</span><span class="g gl">頂級</span></div></div><div class="sid">100 mg</div></div>
+<div class="si"><div class="sil"><div class="sin" style="color:#fdba74">Zinc Pico + Cu</div><div class="sim"><span>午餐</span><span class="g gn">加銅</span></div></div><div class="sid">30+2 mg</div></div>
+<div class="si"><div class="sil"><div class="sin">D3+K2 MK-7</div><div class="sim"><span>午餐</span><span style="color:var(--am)">驗血</span></div></div><div class="sid">5000 IU</div></div>
+<div class="si"><div class="sil"><div class="sin">Omega-3 rTG</div><div class="sim"><span>午餐</span></div></div><div class="sid">2000 mg</div></div>
+<div class="si"><div class="sil"><div class="sin" style="color:#fde68a">B-Complex 甲基化</div><div class="sim"><span>午餐</span><span class="g gw">取代P5P</span></div></div><div class="sid">1 粒</div></div>
+<div class="si"><div class="sil"><div class="sin">Maca 黑色糊化</div><div class="sim"><span>午餐</span></div></div><div class="sid">1500-3000</div></div>
+<div class="si"><div class="sil"><div class="sin" style="color:#f9a8d4">Citrulline 2:1</div><div class="sim"><span>訓練前</span><span>粉</span></div></div><div class="sid">6-8 g</div></div>
+<div class="si"><div class="sil"><div class="sin">Creatine Creapure</div><div class="sim"><span>訓練前</span><span>粉</span></div></div><div class="sid">5 g</div></div>
+<div class="si"><div class="sil"><div class="sin" style="color:#a5b4fc">Mag Bisglycinate</div><div class="sim"><span>睡前</span></div></div><div class="sid">400 mg</div></div>
+<div class="si"><div class="sil"><div class="sin" style="color:#67e8f9">Collagen Peptides</div><div class="sim"><span>睡前</span><span>粉</span></div></div><div class="sid">10-20 g</div></div>
+
+<div class="ld" style="color:var(--og)">🟡 RECOVERY</div>
+<div class="si rc"><div class="sil"><div class="sin" style="color:var(--og)">Vit C Liposomal</div><div class="sim"><span>早+午</span><span class="g gr">Rec</span></div></div><div class="sid">1500-2000/日</div></div>
+<div class="si rc"><div class="sil"><div class="sin" style="color:var(--og)">L-Theanine Suntheanine</div><div class="sim"><span>睡前</span><span class="g gr">Rec</span></div></div><div class="sid">200-400 mg</div></div>
+<div class="si rc"><div class="sil"><div class="sin" style="color:var(--og)">Melatonin 舌下</div><div class="sim"><span>睡前</span><span class="g gr">Rec</span></div></div><div class="sid">0.5-3 mg</div></div>
+<div class="si rc"><div class="sil"><div class="sin" style="color:var(--og)">PS Sunflower</div><div class="sim"><span>午餐</span><span class="g gr">Rec</span></div></div><div class="sid">100-200 mg</div></div>
+<div class="si rc"><div class="sil"><div class="sin" style="color:var(--og)">Whey Isolate</div><div class="sim"><span>午餐</span><span class="g gr">Rec</span></div></div><div class="sid">20-30 g</div></div>
+<div class="si rc"><div class="sil"><div class="sin" style="color:var(--og)">Multivitamin 甲基化</div><div class="sim"><span>早上</span><span class="g gr">Rec</span></div></div><div class="sid">1 粒</div></div>
+
+<div class="ld" style="color:var(--pk)">🩷 性功能</div>
+<div class="si sx"><div class="sil"><div class="sin" style="color:var(--pk)">DHEA Micronized</div><div class="sim"><span>午餐</span><span class="g gx">性功能</span><span style="color:var(--rd)">先驗</span></div></div><div class="sid">25-50 mg</div></div>
+<div class="si sx"><div class="sil"><div class="sin" style="color:var(--pk)">Tongkat Ali 100:1</div><div class="sim"><span>午餐</span><span class="g gx">性功能</span></div></div><div class="sid">200-400 mg</div></div>
+</div>
+
+<!-- ========== SAFETY ========== -->
+<div id="p-sf" class="s">
+<div class="st">⚠️ 安全提醒</div>
+<div class="ss">全部安全資訊</div>
+
+<div class="ld" style="color:var(--rd)">🔴 RECOVERY</div>
+<div class="wc cr"><div class="wt wr">💔 心臟監測</div><div class="wx">Meth 心臟毒性：心肌病、心律不齊、冠脈痙攣。需定期 ECG + Echo。<em>Regular ECG and echocardiogram essential.</em></div></div>
+<div class="wc cr"><div class="wt wr">🧠 多巴胺受體修復</div><div class="wx">D2 受體需 12-18 月修復。暫停多巴胺前體。Anhedonia 係正常過程。<em>Receptors need 12-18 months. Low motivation is expected.</em></div></div>
+<div class="wc cr"><div class="wt wr">🦷 口腔健康</div><div class="wx">補充劑唔能取代牙科護理。<em>Refer for dental evaluation.</em></div></div>
+
+<div class="ld" style="color:var(--pk)">🩷 性功能</div>
+<div class="wc"><div class="wt wp">DHEA 須知</div><div class="wx">先驗 DHEA-S。可致暗瘡、毛髮增生。女性 10-25mg。每3月覆驗。<em>Must confirm low DHEA-S. Lower dose for female patients.</em></div></div>
+<div class="wc"><div class="wt wp">Tongkat Ali</div><div class="wx">荷爾蒙敏感癌症禁用。可能影響血糖。4週開 1週停。<em>Contraindicated in hormone-sensitive cancers.</em></div></div>
+<div class="wc"><div class="wt wp">荷爾蒙評估</div><div class="wx">驗：Total+Free Testosterone、SHBG、DHEA-S、LH/FSH、Prolactin、Thyroid。如 hypogonadism → TRT（專科）。<em>Full hormonal panel. TRT if confirmed.</em></div></div>
+
+<div class="ld" style="color:var(--am)">⚠️ 通用</div>
+<div class="wc"><div class="wt">🩸 驗血 每1-3個月</div><div class="wx">25(OH)D、鋅、銅、肝腎功能、CBC、DHEA-S、荷爾蒙、心臟標記物。</div></div>
+<div class="wc"><div class="wt">💊 藥物交互</div><div class="wx">NAC↔硝酸甘油 · Omega-3↔出血 · Tyrosine↔MAOI · Zinc↔抗生素 · Melatonin↔鎮靜藥 · DHEA↔荷爾蒙藥</div></div>
+<div class="wc"><div class="wt">🔄 引入次序</div><div class="wx">W1-2: NAC+Mg → W3-4: +Theanine+Melatonin → W5-6: +Omega3+Multi → W7-8: +CoQ10+B → W9+: 其餘 → 最後性功能組</div></div>
+
+<div class="disc"><p><strong>⚕️ 免責聲明</strong></p><p style="margin-top:5px">僅供臨床參考。所有方案需主診醫生評估決定。<br><em style="color:var(--muted)">Clinical reference only. Not a prescription.</em></p></div>
+</div>
+
+</div>
+
+<div class="tb">
+<button class="t a" data-p="tl" onclick="sw(this)"><i>🕒</i><span>時間軸</span></button>
+<button class="t" data-p="gd" onclick="sw(this)"><i>💊</i><span>選購</span></button>
+<button class="t" data-p="sh" onclick="sw(this)"><i>🛒</i><span>購物</span></button>
+<button class="t" data-p="sf" onclick="sw(this)"><i>⚠️</i><span>安全</span></button>
+</div>
+
+<script>
+function saveState(){try{const a=document.querySelector('.t.a');const tab=a?a.dataset.p:'tl';const open=[];document.querySelectorAll('.bk.o').forEach(b=>{if(b.dataset.id)open.push(b.dataset.id);});localStorage.setItem('bh',JSON.stringify({tab,open,scroll:window.scrollY}));}catch(e){}}
+function loadState(){try{const d=JSON.parse(localStorage.getItem('bh'));if(!d)return;const btn=document.querySelector(`.t[data-p="${d.tab}"]`);if(btn)sw(btn,true);document.querySelectorAll('.bk').forEach(b=>{if(d.open&&d.open.includes(b.dataset.id))b.classList.add('o');else b.classList.remove('o');});if(d.scroll)setTimeout(()=>window.scrollTo(0,d.scroll),50);}catch(e){}}
+function sw(btn,noSave){const p=btn.dataset.p;document.querySelectorAll('.s').forEach(s=>s.classList.remove('a'));document.getElementById('p-'+p).classList.add('a');document.querySelectorAll('.t').forEach(b=>b.classList.remove('a'));btn.classList.add('a');if(!noSave){window.scrollTo({top:0,behavior:'smooth'});saveState();}}
+function tg(el){el.classList.toggle('o');saveState();}
+
+// Install banner logic
+function dismissInstall(){document.getElementById('install-banner').style.display='none';localStorage.setItem('bh_installed','1');}
+function checkInstall(){
+    const isStandalone=window.matchMedia('(display-mode:standalone)').matches||window.navigator.standalone;
+    const dismissed=localStorage.getItem('bh_installed');
+    if(!isStandalone&&!dismissed){document.getElementById('install-banner').style.display='block';}
+}
+
+document.addEventListener('DOMContentLoaded',()=>{loadState();checkInstall();});
+document.addEventListener('visibilitychange',()=>{if(document.hidden)saveState();});
+setInterval(saveState,3000);
+
+// Register service worker
+if('serviceWorker' in navigator){navigator.serviceWorker.register('./sw.js').catch(()=>{});}
+</script>
+</body>
+</html>
